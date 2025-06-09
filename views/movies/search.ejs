@@ -1,0 +1,20 @@
+<h1>Search Results</h1>
+
+<% if (searchQuery) { %>
+    <p>Results for: "<%= searchQuery %>"</p>
+<% } %>
+
+<% if (movie && movie.length > 0) { %>
+    <div class="movies-grid">
+        <% movie.forEach(m => { %>
+            <div class="movie-card">
+                <h3><a href="/movies/<%= m._id %>"><%= m.title %></a></h3>
+                <% if (m.director) { %>
+                    <p>Director: <%= m.director %></p>
+                <% } %>
+            </div>
+        <% }) %>
+    </div>
+<% } else { %>
+    <p>No movies found</p>
+<% } %>

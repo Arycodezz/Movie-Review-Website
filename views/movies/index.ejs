@@ -1,0 +1,15 @@
+<% layout('layout/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/index.css">
+<h1>Movie Reviewer</h1>
+<ul>
+    <% for(let m of movies){ %>
+        <div class = "Movie">
+        <li><a href="/movies/<%= m._id %>">
+                <span class = "name"><%=m.name%></span>
+                <img src="<%= m.image %>" alt="">
+                <br>
+                <%=m.description  %>
+            </a></li>
+        </div>
+        <% } %>
+</ul>

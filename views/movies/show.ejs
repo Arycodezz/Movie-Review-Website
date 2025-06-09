@@ -1,0 +1,88 @@
+<% layout('layout/boilerplate') %>
+    <link rel="stylesheet" href="/stylesheets/show.css">
+    <div class="card">
+        <h1>
+            <%= movie.name %>
+        </h1>
+        <img src="<%= movie.image %>" alt="Movie Poster">
+
+        <p>
+            <%= movie.description %>
+        </p>
+        <p>
+            <%= movie.IMDBRating %>
+        </p>
+        <p>
+            <%= movie.Director %>
+        </p>
+    </div>
+
+    <% if(currentUser){ %>
+    <div class="card">
+        <form action="/movies/<%=movie._id%>/reviews" class="review-form" method="post">
+            <h3 class="form-title">Share Your Thoughts</h3>
+            <div class="form-group">
+                <label for="body">Add Review</label>
+                <textarea name="review[body]" id="body" placeholder="What did you think about this movie?"
+                    required></textarea>
+            </div>
+            <div class="rating-section">
+                <span class="rating-label">Your Rating:</span>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="review[rating]" value="5" />
+                    <label for="star5">★</label>
+                    <input type="radio" id="star4" name="review[rating]" value="4" />
+                    <label for="star4">★</label>
+                    <input type="radio" id="star3" name="review[rating]" value="3" />
+                    <label for="star3">★</label>
+                    <input type="radio" id="star2" name="review[rating]" value="2" />
+                    <label for="star2">★</label>
+                    <input type="radio" id="star1" name="review[rating]" value="1" />
+                    <label for="star1">★</label>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Submit Review</button>
+        </form>
+    </div>
+    <% } %>
+    <div class="reviews-container">
+        <h1 class="reviews-title">User Reviews</h1>
+        <div class = "rating-glass">
+            <% if(movie.reviews && movie.reviews.length > 0){ %>
+                <% let totalRating  = 0 %>
+                <% movie.reviews.forEach(review => { %>
+                        <% totalRating += review.rating %>
+                <% }); %>
+                <% let averageRating = (totalRating/movie.reviews.length).toFixed(1) %>
+                <div class = "rating-number"><%= averageRating  %></div>
+                <div class = "rating-text">Average User Rating</div>
+           <% }else{ %>
+                <div class = "rating-number">No Reviews Yet!!</div>
+            <% } %>
+        </div>
+        <div class="reviews-list">
+            <% for(let review of movie.reviews){ %>
+                <div class="review-card">
+                    <div class="review-rating">
+                        <% for(let i=0; i < 5; i++) { %>
+                            <span class="star <%= i < review.rating ? 'filled' : '' %>">★</span>
+                            <% } %>
+                                <span class="rating-text">
+                                    <%= review.rating %>/5
+                                </span>
+                    </div>
+                    <div class="review-body">
+                        <%= review.body %>
+                    </div>
+                    <div class = "review-author">
+                        ~<%= review.author.username %>
+                    </div>
+                    <% if(currentUser && review.author.equals(currentUser._id)){ %>
+                    <form action="/movies/<%= movie._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                        <button class="delete-btn">Delete</button>
+                    </form>
+                    <% } %>
+                </div>
+                <% } %>
+        </div>
+    </div>
